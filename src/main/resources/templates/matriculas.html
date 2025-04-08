@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Matrículas</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>Lista de Matrículas</h1>
+
+    <!-- Botón para agregar una nueva matrícula -->
+    <a href="/matricula" class="btn-new">Agregar Matrícula</a>
+
+    <!-- Tabla de matrículas -->
+    <table>
+        <thead>
+        <tr>
+            <th>Estudiante</th>
+            <th>Materia</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="enrollment : ${enrollments}">
+            <td th:text="${enrollment.student.name}"></td> <!-- Asegúrate de que 'student' y 'name' estén correctamente definidos -->
+            <td th:text="${enrollment.student.program}"></td> <!-- Asegúrate de que 'program' esté presente -->
+            <td th:text="${enrollment.course.name}"></td> <!-- 'course.name' debe estar disponible -->
+            <td th:text="${enrollment.course.professor.name}"></td> <!-- 'professor.name' debe estar presente -->
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

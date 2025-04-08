@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Matrícula</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>Matrícula de Estudiantes</h1>
+
+    <form th:action="@{/matricula}" method="post">
+        <!-- Selección de estudiante -->
+        <div class="form-group">
+            <label for="student">Selecciona un estudiante:</label>
+            <select name="student" id="student" required>
+                <option value="" disabled selected>Elige un estudiante</option>
+                <option th:each="student : ${students}" th:value="${student.id}" th:text="${student.name}"></option>
+            </select>
+        </div>
+
+        <!-- Selección de materia -->
+        <div class="form-group">
+            <label for="course">Selecciona una materia:</label>
+            <select name="course" id="course" required>
+                <option value="" disabled selected>Elige una materia</option>
+                <option th:each="course : ${courses}" th:value="${course.id}" th:text="${course.name}"></option>
+            </select>
+        </div>
+
+        <!-- Botón para enviar el formulario -->
+        <div class="form-group">
+            <button type="submit">Crear Matrícula</button>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>
