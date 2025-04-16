@@ -1,7 +1,9 @@
 package org.example.primerproyecto.service.impl;
 
+import org.example.primerproyecto.dto.CourseDTO;
 import org.example.primerproyecto.entity.Course;
 import org.example.primerproyecto.entity.Student;
+import org.example.primerproyecto.mapper.CourseMapper;
 import org.example.primerproyecto.repository.CourseRepository;
 import org.example.primerproyecto.repository.EnrollmentRepository;
 import org.example.primerproyecto.service.CourseService;
@@ -9,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CourseServiceImpl implements CourseService {
@@ -19,10 +22,15 @@ public class CourseServiceImpl implements CourseService {
     @Autowired
     private EnrollmentRepository enrollmentRepository;
 
+    @Autowired
+    private CourseMapper courseMapper;
+
     @Override
-    public Course createCourse(Course course) {
+    public CourseDTO createCourse(CourseDTO course) {
+        var entity = courseMapper.toEntity(course);
         if (courseRepository.findByName(course.getName()).isEmpty()) {
-            return courseRepository.save(course);
+            Course courseEntity = courseRepository.save(entity);
+            return courseMapper.toDTO(courseEntity);
         }else{
             throw new RuntimeException("Course already exists with name " + course.getName());
         }
@@ -30,30 +38,20 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public List<Course> getAllCourses() {
-        return courseRepository.findAll();
+    public List<CourseDTO> getAllCourses() {
+        return courseRepository.findAll().stream().map(entity -> courseMapper.toDTO(entity)).collect(Collectors.toList());
     }
 
     @Override
-    public List<Course> listCourseOfStudent(long id) {
+    public List<CourseDTO> listCourseOfStudent(long id) {
         var enrollments = enrollmentRepository.findByStudent_Id(id);
-        return enrollments.stream().map(enrollment -> enrollment.getCourse()).toList();
+        return enrollments.stream().map(enrollment -> courseMapper.toDTO(enrollment.getCourse())).toList();
     }
 
     @Override
-    public Course getCourseById(long id) {
-
-       return courseRepository.findById(id).orElseThrow(() -> new RuntimeException("Course not found with id " + id));
-
-       /*
-       Optional<Course> course = courseRepository.findById(id);
-         if(course.isPresent()){
-              return course.get();
-         } else {
-              throw new RuntimeException("Course not found with id " + id);
-         }
-
-         */
+    public CourseDTO getCourseById(long id) {
+       var entity =  courseRepository.findById(id).orElseThrow(() -> new RuntimeException("Course not found with id " + id));
+       return courseMapper.toDTO(entity);
     }
 
     @Override

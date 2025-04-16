@@ -1,5 +1,6 @@
 package org.example.primerproyecto.service;
 
+import org.example.primerproyecto.dto.StudentDTO;
 import org.example.primerproyecto.entity.Course;
 import org.example.primerproyecto.entity.Student;
 import org.springframework.data.domain.Page;
@@ -8,19 +9,19 @@ import java.util.List;
 
 public interface StudentService {
 
-     void createStudent(Student student);
+     void createStudent(StudentDTO student);
 
-     List<Student> getAllStudents();
+     List<StudentDTO> getAllStudents();
 
-     List<Student> getByProgram(String program);
+     List<StudentDTO> getByProgram(String program);
 
-     Page<Student> finAll(int page);
+     Page<StudentDTO> finAll(int page);
 
-     List<Student> getStudentsByCourse(Course course);
+     List<StudentDTO> getStudentsByCourse(Course course);
 
-     Student getStudentsById(long id);
+     StudentDTO getStudentsById(long id);
 
-     Student getStudentsByCode(String code);
+     StudentDTO getStudentsByCode(String code);
 
-     List<Student> finAll();
+     List<StudentDTO> finAll();
 }

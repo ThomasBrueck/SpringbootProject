@@ -1,8 +1,10 @@
 package org.example.primerproyecto.service.impl;
 
+import org.example.primerproyecto.dto.StudentDTO;
 import org.example.primerproyecto.entity.Course;
 import org.example.primerproyecto.entity.Enrollment;
 import org.example.primerproyecto.entity.Student;
+import org.example.primerproyecto.mapper.StudentMapper;
 import org.example.primerproyecto.repository.EnrollmentRepository;
 import org.example.primerproyecto.repository.StudentRepository;
 import org.example.primerproyecto.service.StudentService;
@@ -27,48 +29,63 @@ public class StudentServiceImpl implements StudentService {
 
     @Autowired
     private EnrollmentRepository enrollmentRepository;
+    @Autowired
+    private StudentMapper studentMapper;
 
     @Override
-    public void createStudent(Student student) {
-        studentRepository.save(student);
-        System.out.println("Creando estudiante " + student.getName());
+    public void createStudent(StudentDTO student) {
+        var entity = studentMapper.toEntity(student);
+        Student studentEntity = studentRepository.save(entity);
+        studentMapper.toDTO(studentEntity);
+        System.out.println("Creando estudiante " + studentEntity.getName());
     }
 
     @Override
-    public List<Student> getAllStudents() {
-        return studentRepository.findAll();
+    public List<StudentDTO> getAllStudents() {
+        return studentRepository.findAll().stream().map(entity -> studentMapper.toDTO(entity)).collect(Collectors.toList());
     }
 
     @Override
-    public List<Student> getByProgram(String program) {
-        return studentRepository.findByProgram(program);
+    public List<StudentDTO> getByProgram(String program) {
+        List<Student> students = studentRepository.findByProgram(program);
+        return students.stream().map(entity -> studentMapper.toDTO(entity)).collect(Collectors.toList());
     }
 
     @Override
-    public Page<Student> finAll(int page) {
+    public Page<StudentDTO> finAll(int page) {
         Pageable pageable = PageRequest.of(page, pageSize);
-        return studentRepository.findAll(pageable);
+        Page<Student> studentPage = studentRepository.findAll(pageable);
+        return studentPage.map(student -> studentMapper.toDTO(student));
     }
 
     @Override
-    public List<Student> finAll() {
-        return studentRepository.findAll();
+    public List<StudentDTO> finAll() {
+        return studentRepository.findAll().stream()
+                .map(student -> studentMapper.toDTO(student))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<Student> getStudentsByCourse(Course course) {
+    public List<StudentDTO> getStudentsByCourse(Course course) {
         List<Enrollment> enrollments = enrollmentRepository.findByCourse(course);
-        return enrollments.stream().map(Enrollment::getStudent).collect(Collectors.toList());
+        return enrollments.stream()
+                .map(Enrollment::getStudent)
+                .map(student -> studentMapper.toDTO(student))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Student getStudentsById(long id) {
-        return studentRepository.findById(id).orElse(null);
+    public StudentDTO getStudentsById(long id) {
+        return studentRepository.findById(id)
+                .map(student -> studentMapper.toDTO(student))
+                .orElse(null);
     }
 
     @Override
-    public Student getStudentsByCode(String code) {
-        return studentRepository.findByCode(code).orElse(null);
+    public StudentDTO getStudentsByCode(String code) {
+        return studentRepository.findByCode(code)
+                .map(student -> studentMapper.toDTO(student))
+                .orElse(null);
     }
 
 
