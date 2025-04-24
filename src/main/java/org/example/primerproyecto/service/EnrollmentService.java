@@ -1,6 +1,10 @@
 package org.example.primerproyecto.service;
 
+import org.example.primerproyecto.dto.EnrollmentDTO;
+
 public interface EnrollmentService {
 
-    void enrollStudent(Long studentId, Long courseId);
+    EnrollmentDTO enrollStudent(Long studentId, Long courseId);
+
+    void deleteEnrollment(Long enrollmentId);
 }

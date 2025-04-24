@@ -45,4 +45,6 @@ public class Professor {
     public void setCourseList(List<Course> courseList) {
         this.courseList = courseList;
     }
+
+
 }

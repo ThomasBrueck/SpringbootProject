@@ -28,7 +28,7 @@ public class JwtService {
 
         return Jwts.builder()
                 .setSubject(userDetails.getUsername())
-                .setClaims(createClaims(userDetails))
+                .addClaims(createClaims(userDetails))
                 .setIssuedAt(now)
                 .setExpiration(expiry)
                 .signWith(Keys.hmacShaKeyFor(secret.getBytes()))
@@ -43,6 +43,14 @@ public class JwtService {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList()));
         return claims;
+    }
+
+    public Claims extractAllClaims(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(Keys.hmacShaKeyFor(secret.getBytes()))
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 
 }

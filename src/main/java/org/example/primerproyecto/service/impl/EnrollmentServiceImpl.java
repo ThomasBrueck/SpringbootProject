@@ -1,9 +1,11 @@
 package org.example.primerproyecto.service.impl;
 
 import jakarta.transaction.Transactional;
+import org.example.primerproyecto.dto.EnrollmentDTO;
 import org.example.primerproyecto.entity.Course;
 import org.example.primerproyecto.entity.Enrollment;
 import org.example.primerproyecto.entity.Student;
+import org.example.primerproyecto.mapper.EnrollmentMapper;
 import org.example.primerproyecto.repository.EnrollmentRepository;
 import org.example.primerproyecto.service.EnrollmentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +18,11 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     @Autowired
     private EnrollmentRepository enrollmentRepository;
 
+    @Autowired
+    private EnrollmentMapper enrollmentMapper;
+
     @Transactional
-    public void enrollStudent(Long studentId, Long courseId) {
+    public EnrollmentDTO enrollStudent(Long studentId, Long courseId) {
         var course = new Course();
         course.setId(courseId);
 
@@ -30,13 +35,18 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
         enrollmentRepository.save(enrollment);
 
-        /*
-        if (true) {
-            throw new RuntimeException("Intentional failure for rollback");
+        return enrollmentMapper.toDTO(enrollment);
+    }
+
+    @Override
+    public void deleteEnrollment(Long enrollmentId) {
+
+        if (!enrollmentRepository.existsById(enrollmentId)) {
+            throw new RuntimeException("Enrollment not found with ID: " + enrollmentId);
         }
 
-         */
-
+        // Delete the enrollment
+        enrollmentRepository.deleteById(enrollmentId);
     }
 }
 

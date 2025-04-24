@@ -1,5 +1,6 @@
 package org.example.primerproyecto.service;
 
+import org.example.primerproyecto.dto.CourseDTO;
 import org.example.primerproyecto.dto.StudentDTO;
 import org.example.primerproyecto.entity.Course;
 import org.example.primerproyecto.entity.Student;
@@ -9,7 +10,7 @@ import java.util.List;
 
 public interface StudentService {
 
-     void createStudent(StudentDTO student);
+     StudentDTO createStudent(StudentDTO student);
 
      List<StudentDTO> getAllStudents();
 
@@ -17,11 +18,22 @@ public interface StudentService {
 
      Page<StudentDTO> finAll(int page);
 
-     List<StudentDTO> getStudentsByCourse(Course course);
+     StudentDTO updateStudent(Long id, StudentDTO studentDTO);
+
+     List<StudentDTO> getStudentsByCourse(Long courseId);
 
      StudentDTO getStudentsById(long id);
 
      StudentDTO getStudentsByCode(String code);
 
      List<StudentDTO> finAll();
+
+     boolean enrollStudentInCourse(long studentId, long courseId);
+
+     Page<StudentDTO> findAllSortedByName(int page);
+
+
+
+
+
 }

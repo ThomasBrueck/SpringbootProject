@@ -24,8 +24,6 @@ public class AuthController {
         return "signup";
     }
 
-
-
     @GetMapping("/home")
     public String home() {
         return "home";
